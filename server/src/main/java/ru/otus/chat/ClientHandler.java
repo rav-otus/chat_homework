@@ -25,7 +25,7 @@ public class ClientHandler {
 
         new Thread(() -> {
             try {
-                System.out.println("Клиент подключился");
+                System.out.println("Клиент " + username + " подключился");
 
                 while (true) {
                     String message = in.readUTF();
@@ -35,9 +35,8 @@ public class ClientHandler {
                             break;
                         }
 
-                    } else {
-                        server.broadcastMessage(username + ": " + message);
                     }
+                    parseAndSendMsg(username, message);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -84,6 +83,35 @@ public class ClientHandler {
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
+        }
+    }
+
+    public void parseAndSendMsg(String username, String message) {
+        String[] messageStrings = message.split(" ", 3);
+        ClientHandler client = null;
+        if (messageStrings[0].equals("/w")) {
+            if (messageStrings.length == 3) {
+                if (messageStrings[1] != null) {
+                    client = server.userByName(messageStrings[1].trim());
+                    if (client != null) {
+                        if (messageStrings[2] != null) {
+                            server.sendToUser(client, messageStrings[2]);
+                        } else {
+                            sendMsg("Отсутствует сообщение в команде /w");
+                        }
+                    } else {
+                        sendMsg("Адресат не найден");
+                    }
+                } else {
+                    sendMsg("Отсутствует адресат в команде /w");
+                }
+            } else if (messageStrings.length == 2) {
+                sendMsg("Отсутствует сообщение в команде /w");
+            } else if (messageStrings.length == 1) {
+                sendMsg("Отсутствуют адресат и сообщение в команде /w");
+            }
+        } else {
+            server.broadcastMessage(username + ": " + message);
         }
     }
 }
