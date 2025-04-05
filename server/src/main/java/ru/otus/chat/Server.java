@@ -35,12 +35,21 @@ public class Server {
 
     public void unsubscribe(ClientHandler clientHandler) {
         clients.remove(clientHandler);
-        System.out.println("Клиент " + clientHandler.getUsername() + " отлючился");
+        System.out.println("Клиент " + clientHandler.getUsername() + " отключился");
     }
 
     public void broadcastMessage(String message) {
         for (ClientHandler client : clients) {
             client.sendMsg(message);
         }
+    }
+
+    public ClientHandler userByName(String username) {
+        for (ClientHandler client : clients) {
+            if(client.getUsername().equals(username)){
+                return client;
+            }
+        }
+        return null;
     }
 }
