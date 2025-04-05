@@ -43,4 +43,17 @@ public class Server {
             client.sendMsg(message);
         }
     }
+
+    public ClientHandler userByName(String username) {
+        for (ClientHandler client : clients) {
+            if (client.getUsername().equals(username)) {
+                return client;
+            }
+        }
+        return null;
+    }
+
+    public void sendToUser(ClientHandler client, String message) {
+        client.sendMsg(message);
+    }
 }
