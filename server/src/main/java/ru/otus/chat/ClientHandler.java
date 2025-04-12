@@ -4,6 +4,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -51,7 +52,7 @@ public class ClientHandler {
                             if (role.contains(Roles.ADMIN)) {
                                 ClientHandler client = server.userByName(strMessage[1]);
                                 if (client != null) {
-                                    client.disconnect();
+                                        client.disconnect();
                                 } else {
                                     sendMsg("Такого пользователя нет");
                                 }
@@ -66,7 +67,8 @@ public class ClientHandler {
                 }
             } catch (IOException e) {
                 e.printStackTrace();
-            } finally {
+            }
+            finally {
                 disconnect();
             }
         }).start();
